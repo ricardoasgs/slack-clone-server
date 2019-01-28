@@ -4,6 +4,7 @@ import { graphqlExpress, graphiqlExpress } from "apollo-server-express";
 import { makeExecutableSchema } from "graphql-tools";
 import { fileLoader, mergeTypes, mergeResolvers } from "merge-graphql-schemas";
 import path from "path";
+import cors from "cors";
 
 import models from "./models";
 
@@ -22,6 +23,7 @@ const app = express();
 
 const graphqlEndpoint = "/graphql";
 
+app.use(cors("*"));
 app.use(
   graphqlEndpoint,
   bodyParser.json(),
@@ -38,6 +40,6 @@ app.use(
 
 app.use("/graphiql", graphiqlExpress({ endpointURL: graphqlEndpoint }));
 
-models.sequelize.sync({ force: true }).then(() => {
+models.sequelize.sync().then(() => {
   app.listen(3003);
 });
